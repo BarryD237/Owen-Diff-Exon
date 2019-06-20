@@ -1,0 +1,29 @@
+#################################################### Trimming files ###########################################################
+
+Module load Anaconda3/4.4.0 (source activate QC)
+
+Run script: 
+
+#!/bin/bash
+#
+#SBATCH -n 8
+#SBATCH --job-name=bbduk
+#SBATCH -o bbduk.out # STDOUT
+#SBATCH -e bbduk.err # STDERR
+
+adapters=/data/bdigby/Benjamin_Morga/raw_data/adapters.fa
+
+while read x y; do
+
+        base1=$(basename $x .fastq.gz)
+        base2=$(basename $y .fastq.gz)
+
+        bbduk.sh in1=$x in2=$y \
+        out1=../trimmed_reads/"${base1}".fastq.gz \
+        out2=../trimmed_reads/"${base2}".fastq.gz \
+        ref=$adapters \
+        ktrim=r ktrim=l k=23 mink=9 hdist=2 \
+        qtrim=rl trimq=20 maq=20 \
+        minlen=40 tpe tbo
+
+done < file_list.txt

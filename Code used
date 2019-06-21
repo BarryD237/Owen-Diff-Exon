@@ -46,3 +46,26 @@ extract_exons.py ../annot/GCF_000297895.1_oyster_v9_genomic.sorted.gtf > oyster.
 
 hisat2-build -p 4 --ss oyster.ss --exon oyster.exon ../genome/GCF_000297895.1_oyster_v9_genomic.fa oyster_genome_index
 
+###################################################### Map to Oyster ##########################################################
+
+
+#!/bin/bash
+#
+#BATCH -n 8
+#SBATCH --job-name=hisat2
+#SBATCH -o hisat.out # STDOUT
+#SBATCH -e hisat.err # STDERR
+
+while read x y; do
+
+        base=$(basename $x .fastq.gz | sed 's/_.*//')
+        echo $base
+
+        hisat2 -p 8 -x ../reference/oyster_genome_index --rna-strandness RF \
+        -1 $x -2 $y | samtools view -Sbh > "${base}".bam
+
+        samtools sort "${base}".bam > ../bams/"${base}"_sort.bam
+
+        rm ./"${base}".bam
+
+done < file_list.txt

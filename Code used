@@ -32,26 +32,26 @@ done < file_list.txt
 
 # convert gff to gtf
 
-./gff3ToGenePred GCF_000297895.1_oyster_v9_genomic.sorted.gff GCF_000297895.1_oyster_v9_genomic.sorted.genePred
-./genePredToGtf file GCF_000297895.1_oyster_v9_genomic.sorted.genePred GCF_000297895.1_oyster_v9_genomic.sorted.gtf
+./gff3ToGenePred Crassostrea_gigas.oyster_v9.43.gff3 C.gigas.genePred
+./genePredToGtf file C.gigas.genePred C.gigas.gtf
 
 # Extracted exon and splice site info
 
-extract_splice_sites.py ../annot/GCF_000297895.1_oyster_v9_genomic.sorted.gtf > oyster.ss
-extract_exons.py ../annot/GCF_000297895.1_oyster_v9_genomic.sorted.gtf > oyster.exon
+extract_splice_sites.py C.gigas.gtf > oyster.ss
+extract_exons.py C.gigas.gtf > oyster.exon
 
 # Building genome index
 
 (source activate RNA)
 
-hisat2-build -p 4 --ss oyster.ss --exon oyster.exon ../genome/GCF_000297895.1_oyster_v9_genomic.fa oyster_genome_index
+hisat2-build -p 4 --ss oyster.ss --exon oyster.exon Crassostrea_gigas.oyster_v9.dna.toplevel.fa oyster_genome_index
 
 ###################################################### Map to Oyster ##########################################################
 
 
 #!/bin/bash
 #
-#BATCH -n 8
+#SBATCH -n 8
 #SBATCH --job-name=hisat2
 #SBATCH -o hisat.out # STDOUT
 #SBATCH -e hisat.err # STDERR
@@ -84,7 +84,7 @@ done < file_list.txt
 #SBATCH -e counts.err # STDERR
 
 script=/home/bdigby/.local/easybuild/software/Anaconda3/4.4.0/envs/RNA/bin/dexseq_count.py
-ref=../reference/Crassostrea_gigas.oyster_v9.43.gff **(deleted the 3 from gff3)**
+ref=../reference/Crassostrea_gigas.oyster_v9.43.gff3
 
 for f in *.bam; do
 

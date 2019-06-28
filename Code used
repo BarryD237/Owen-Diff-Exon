@@ -69,3 +69,34 @@ while read x y; do
         rm ./"${base}".bam
 
 done < file_list.txt
+
+########################################################## Counts #############################################################
+
+** decided to download Ensembl gff3 file for reference, instead of prepare gff3 file from NCBI GTF file 
+** this is based on using biomaRt downstream (ensembl compatibility)
+
+#!/bin/bash
+#
+#SBATCH -p highmem
+#SBATCH -n 8
+#SBATCH --job-name=DexSeq
+#SBATCH -o counts.out # STDOUT
+#SBATCH -e counts.err # STDERR
+
+script=/home/bdigby/.local/easybuild/software/Anaconda3/4.4.0/envs/RNA/bin/dexseq_count.py
+ref=../reference/Crassostrea_gigas.oyster_v9.43.gff **(deleted the 3 from gff3)**
+
+for f in *.bam; do
+
+        base=$(basename $f _sort.bam)
+        echo $base
+
+        python $script -f bam -p yes -r name -s reverse $ref $f ../Quant/"${base}".txt
+
+done
+
+
+*** To recap; 
+                NCBI GTF file used to guide .exon and .ss files
+                hisat mapped reads to genome taking into account NCBI .exon .ss based annotation
+                for counts.py; used ensembl gff3 file as the reference to keep gene names 'Ensembl' based

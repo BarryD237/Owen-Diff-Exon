@@ -82,7 +82,7 @@ done < file_list.txt
 #SBATCH -e counts.err # STDERR
 
 script=/home/bdigby/.local/easybuild/software/Anaconda3/4.4.0/envs/RNA/bin/dexseq_count.py
-ref=../reference/Crassostrea_gigas.oyster_v9.43.gff3
+ref=../reference/dexseq.gff
 
 for f in *.bam; do
 

@@ -72,8 +72,6 @@ done < file_list.txt
 
 ########################################################## Counts #############################################################
 
-** decided to download Ensembl gff3 file for reference, instead of prepare gff3 file from NCBI GTF file 
-** this is based on using biomaRt downstream (ensembl compatibility)
 
 #!/bin/bash
 #
@@ -97,6 +95,5 @@ done
 
 
 *** To recap; 
-                NCBI GTF file used to guide .exon and .ss files
-                hisat mapped reads to genome taking into account NCBI .exon .ss based annotation
-                for counts.py; used ensembl gff3 file as the reference to keep gene names 'Ensembl' based
+                Exclusively used Ensembl fa, gff file to begin annotation. 
+                prepare_annotation.py used on ensembl.gtf (ucsc derived)
